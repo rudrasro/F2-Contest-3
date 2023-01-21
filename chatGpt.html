@@ -73,7 +73,7 @@
                 <input type="button" id="speakBtn" value="Speak">
             </form>
             <div id="result"></div>
-            <div id="remainingCalls"></div>
+            <div id="callsRemaining">Calls remaining: 10</div>
 
         </div>
     </div>
@@ -97,12 +97,20 @@
         });
         var user = JSON.parse(localStorage.getItem("userData"));
         var speakBtn = document.querySelector("#speakBtn");
+        let remainingCalls = 10;
+        const callsRemaining = document.querySelector("#callsRemaining");
         speakBtn.addEventListener("click", function (event) {
             event.preventDefault();
             var token = document.querySelector("#token").value;
-            const synth = window.speechSynthesis;
-            const speakText = new SpeechSynthesisUtterance(answer.textContent);
-            synth.speak(speakText);
+            if (remainingCalls > 0) {
+                const synth = window.speechSynthesis;
+                const speakText = new SpeechSynthesisUtterance(answer.textContent);
+                synth.speak(speakText);
+                remainingCalls--;
+                callsRemaining.textContent = `Calls remaining: ${remainingCalls}`;
+            } else {
+                callsRemaining.textContent = "You have reached the maximum number of calls.";
+            }
             if (token === user.token) {
                 if (user.callsRemaining > 0) {
                     user.callsRemaining--;
